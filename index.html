@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generatore di Testi Curiosi - VoiceOver & YouTube Shorts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            color: #4a5568;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+        
+        .form-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .topic-input {
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .topic-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+        
+        .result-container {
+            background: #fff;
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 5px solid #48bb78;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .generated-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+        
+        .topic-badge {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .error-container {
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            border-radius: 10px;
+            padding: 1rem;
+            color: #c53030;
+            margin-bottom: 1rem;
+        }
+        
+        .flash-messages {
+            margin-bottom: 1rem;
+        }
+        
+        .flash-success {
+            background: #c6f6d5;
+            border: 1px solid #9ae6b4;
+            color: #22543d;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .flash-error {
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            color: #c53030;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .instructions {
+            background: #ebf8ff;
+            border-left: 4px solid #3182ce;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .instructions h5 {
+            color: #2b6cb0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .instructions ul {
+            color: #2c5282;
+            margin-bottom: 0;
+        }
+        
+        .word-count {
+            font-size: 0.9rem;
+            color: #718096;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .btn-loading {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-container">
+            <div class="header">
+                <h1><i class="fas fa-magic"></i> Generatore di Testi Curiosi</h1>
+                <p>Ottimizzato per VoiceOver e YouTube Shorts</p>
+            </div>
+            
+            <div class="instructions">
+                <h5><i class="fas fa-info-circle"></i> Come funziona:</h5>
+                <ul>
+                    <li>Inserisci un tema di tuo interesse (opzionale)</li>
+                    <li>Se non inserisci niente, verrà scelto un tema casuale</li>
+                    <li>Il testo generato sarà di 100-150 parole, perfetto per i tuoi video short</li>
+                    <li>Ottimizzato per essere letto con VoiceOver su iPhone</li>
+                </ul>
+            </div>
+            
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-{{ 'success' if category == 'success' else 'error' }}">
+                                <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Form -->
+            <div class="form-container">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="topic" class="form-label">
+                            <i class="fas fa-lightbulb"></i> Tema di curiosità (opzionale)
+                        </label>
+                        <input type="text" 
+                               class="form-control topic-input" 
+                               id="topic" 
+                               name="topic" 
+                               placeholder="es. scienza, animali strani, tecnologia, misteri..."
+                               maxlength="100">
+                        <div class="form-text">
+                            Lascia vuoto per un tema casuale tra scienza, storia, animali, tecnologia, misteri e altro!
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary generate-btn">
+                            <span class="btn-text">
+                                <i class="fas fa-wand-magic-sparkles"></i> Genera Testo
+                            </span>
+                            <span class="btn-loading" style="display: none;">
+                                <i class="fas fa-spinner btn-loading"></i> Generando...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Results -->
+            {% if generated_text %}
+                <div class="result-container">
+                    {% if selected_topic %}
+                        <div class="topic-badge">
+                            <i class="fas fa-tag"></i> Tema: {{ selected_topic.title() }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="generated-text">
+                        {{ generated_text }}
+                    </div>
+                    
+                    <div class="word-count">
+                        <i class="fas fa-word"></i> Parole: {{ generated_text.split()|length }}
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if error_message %}
+                <div class="error-container">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Errore:</strong> {{ error_message }}
+                    <br><small>Verifica che la chiave API di Gemini sia configurata correttamente.</small>
+                </div>
+            {% endif %}
+            
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Ripristina il pulsante quando la pagina si carica
+        window.addEventListener('DOMContentLoaded', function() {
+            const btn = document.querySelector('.generate-btn');
+            const btnText = btn.querySelector('.btn-text');
+            const btnLoading = btn.querySelector('.btn-loading');
+            const form = document.querySelector('form');
+            
+            if (btn && btnText && btnLoading) {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                btn.disabled = false;
+            }
+            
+            // Gestisci il submit del form
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Mostra l'indicatore di caricamento
+                    if (btn && btnText && btnLoading) {
+                        btnText.style.display = 'none';
+                        btnLoading.style.display = 'inline';
+                        btn.disabled = true;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
